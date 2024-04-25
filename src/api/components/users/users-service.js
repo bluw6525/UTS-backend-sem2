@@ -1,7 +1,12 @@
 const usersRepository = require('./users-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
-
-async function getUsers(searchfn, searchkey, sortfn, sortkey) {
+/**
+ * get Users
+ * @param {String} searchfn -fieldname for search
+ * @param {RegExp} searchkey -search key
+ * @returns {Array}
+ */
+async function getUsers(searchfn, searchkey) {
   const users = await usersRepository.getUsers();
   const results = [];
   const userkey = await usersRepository.getUserkey();
@@ -26,15 +31,6 @@ async function getUsers(searchfn, searchkey, sortfn, sortkey) {
       });
     }
   }
-  results.sort((a, b) => {
-    if (sortkey === 'asc') {
-      return 1;
-    } else if (sortkey === 'desc') {
-      return -1;
-    } else {
-      return 1;
-    }
-  });
   return results;
 }
 
@@ -178,13 +174,90 @@ async function changePassword(userId, password) {
   return true;
 }
 
+async function splitFormat(query) {
+  if (!!query) {
+    const fieldname = query.match(/^[^:]+/) ? query.match(/^[^:]+/)[0] : null;
+    const key = query.match(/(?<=:).+$/) ? query.match(/(?<=:).+$/)[0] : null;
+    return [fieldname, key];
+  } else {
+    return [null, null];
+  }
+}
+
+async function regularExpression(fieldname, key) {
+  console.log(fieldname, key);
+  const userkey = await usersRepository.getUserkey();
+  let pattern;
+  if (userkey.includes(fieldname)) {
+    if (!!key) {
+      pattern = new RegExp(key, 'i');
+    } else {
+      pattern = new RegExp('.*', 'i');
+    }
+    return pattern;
+  } else {
+    return;
+  }
+}
+
+async function userSort(users, fieldname, key) {
+  const userkey = await usersRepository.getUserkey();
+  const sortedUser = await users.sort((a, b) => {
+    if (key === 'asc' && userkey.includes(fieldname)) {
+      return a[fieldname].localeCompare(b[fieldname]);
+    } else if (key === 'desc' && userkey.includes(fieldname)) {
+      return b[fieldname].localeCompare(a[fieldname]);
+    } else {
+      return a['email'].localeCompare(b['email']);
+    }
+  });
+  return sortedUser;
+}
+
+async function pagination(users, page_size, page_number) {
+  if (!!!page_size) {
+    page_size = users.length;
+  }
+  const count = users.length;
+  const total_pages = Math.ceil(count / page_size);
+  const start = (page_number - 1) * page_size;
+  const end = page_number * page_size;
+  let has_previous_page;
+  let has_next_page;
+  if (page_number > 1) {
+    has_previous_page = true;
+  } else {
+    has_previous_page = false;
+  }
+  if (page_number < total_pages) {
+    has_next_page = true;
+  } else {
+    has_next_page = false;
+  }
+  users = users.slice(start, end);
+  const result = {
+    page_number: page_number,
+    page_size: page_size,
+    count: count,
+    total_pages: total_pages,
+    has_previous_page: has_previous_page,
+    has_next_page: has_next_page,
+    data: users,
+  };
+  return result;
+}
+
 module.exports = {
   getUsers,
   getUser,
   createUser,
   updateUser,
   deleteUser,
+  pagination,
   emailIsRegistered,
   checkPassword,
   changePassword,
+  splitFormat,
+  regularExpression,
+  userSort,
 };

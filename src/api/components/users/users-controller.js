@@ -14,44 +14,13 @@ async function getUsers(request, response, next) {
     let page_size = parseInt(request.query.page_size);
     const search = request.query.search;
     const sort = request.query.sort || 'email:asc';
-    let fnSearch = 0;
-    let iSearch = 0;
-    if (!!search) {
-      fnSearch = search.match(/^[^:]+/)[0];
-      iSearch = search.match(/(?<=:).+$/);
-      if (!!!iSearch) {
-        iSearch = '.*';
-      }
-      iSearch = new RegExp(iSearch, 'i');
-    }
-    const fnSort = sort.match(/^[^:]+/)[0];
-    const iSort = sort.match(/(?<=:).+$/)[0];
-    let users = await usersService.getUsers(fnSearch, iSearch, fnSort, iSort);
-    if (!!!page_size) {
-      page_size = users.length;
-    }
-    const count = users.length;
-    const total_pages = Math.ceil(count / page_size);
-    const start = (page_number - 1) * page_size;
-    const end = page_number * page_size;
-    let has_previous_page = true;
-    let has_next_page = true;
-    if (page_number === 1) {
-      has_previous_page = false;
-    }
-    if (page_number === total_pages) {
-      has_next_page = false;
-    }
-    users = users.slice(start, end);
-    const getUsers = {
-      page_number: page_number,
-      page_size: page_size,
-      count: count,
-      total_pages: total_pages,
-      has_previous_page: has_previous_page,
-      has_next_page: has_next_page,
-      data: users,
-    };
+    const [ fnSearch, iSearch ] = await usersService.splitFormat(search);
+    const regSearch = await usersService.regularExpression(fnSearch, iSearch);
+    console.log(regSearch);
+    const [ fnSort, iSort ] = await usersService.splitFormat(sort);
+    let users = await usersService.getUsers(fnSearch, regSearch);
+    users = await usersService.userSort(users, fnSort, iSort);
+    const getUsers = await usersService.pagination(users, page_size, page_number);
     return response.status(200).json(getUsers);
   } catch (error) {
     return next(error);
