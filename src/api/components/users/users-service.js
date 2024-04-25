@@ -1,22 +1,14 @@
 const usersRepository = require('./users-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
 
-/**
- * Get list of users
- * @param {string} fieldname -field name
- * @param {Object} key -search key
- * @param {}
- * @returns {Array}
- */
-async function getUsers(fieldname, key) {
+async function getUsers(searchfn, searchkey, sortfn, sortkey) {
   const users = await usersRepository.getUsers();
   const results = [];
   const userkey = await usersRepository.getUserkey();
-  console.log(fieldname + key + userkey);
-  if (!!fieldname && !!key && userkey.includes(fieldname)) {
+  if (!!searchfn && !!searchkey && userkey.includes(searchfn)) {
     for (let i = 0; i < users.length; i += 1) {
       const user = users[i];
-      if (key.test(user[fieldname])) {
+      if (searchkey.test(user[searchfn])) {
         results.push({
           id: user.id,
           name: user.name,
@@ -34,7 +26,15 @@ async function getUsers(fieldname, key) {
       });
     }
   }
-
+  results.sort((a, b) => {
+    if (sortkey === 'asc') {
+      return 1;
+    } else if (sortkey === 'desc') {
+      return -1;
+    } else {
+      return 1;
+    }
+  });
   return results;
 }
 
@@ -57,7 +57,6 @@ async function getUser(id) {
     email: user.email,
   };
 }
-
 
 /**
  * Create new user
@@ -182,7 +181,6 @@ async function changePassword(userId, password) {
 module.exports = {
   getUsers,
   getUser,
-  sortUsers,
   createUser,
   updateUser,
   deleteUser,
