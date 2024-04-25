@@ -16,7 +16,6 @@ async function getUsers(request, response, next) {
     const sort = request.query.sort || 'email:asc';
     const [ fnSearch, iSearch ] = await usersService.splitFormat(search);
     const regSearch = await usersService.regularExpression(fnSearch, iSearch);
-    console.log(regSearch);
     const [ fnSort, iSort ] = await usersService.splitFormat(sort);
     let users = await usersService.getUsers(fnSearch, regSearch);
     users = await usersService.userSort(users, fnSort, iSort);
