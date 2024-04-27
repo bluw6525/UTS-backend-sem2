@@ -33,6 +33,23 @@ async function checkLoginCredentials(email, password) {
   return null;
 }
 
+async function updatingUserAttempt(email) {
+  const checkattempt = await authenticationRepository.getUserAttempt(email);
+  if(!!!checkattempt){
+    await authenticationRepository.setUserAttempt(email);
+  }
+  else{
+    await authenticationRepository.updateUserAttempt(email);
+  }
+}
+
+async function getUserAttempt(email) {
+  const attempt =  await authenticationRepository.getUserAttempt(email);
+  return attempt["attempt"];
+}
+
 module.exports = {
   checkLoginCredentials,
+  getUserAttempt,
+  updatingUserAttempt,
 };
