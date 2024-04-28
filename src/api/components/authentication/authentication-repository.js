@@ -12,7 +12,7 @@ async function getUserByEmail(email) {
   return User.findOne({ email });
 }
 
-async function getUserAttempt(email) {
+async function getUserAttempts(email) {
   return attempts.find(attempts => attempts.email === email);
 }
 
@@ -23,10 +23,18 @@ async function setUserAttempt(email) {
 async function updateUserAttempt(email){
   const attemptIndex = attempts.findIndex(attempts => attempts.email === email);
   attempts[attemptIndex].attempt += 1;
+  attempts[attemptIndex].time = moment()
+}
+
+async function resetUserAttempt(email){
+  const attemptIndex = attempts.findIndex(attempts => attempts.email === email);
+  attempts[attemptIndex].attempt = 0;
+  attempts[attemptIndex].time = moment()
 }
 module.exports = {
   getUserByEmail,
-  getUserAttempt,
+  getUserAttempts,
   setUserAttempt,
   updateUserAttempt,
+  resetUserAttempt,
 };

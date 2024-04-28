@@ -13,7 +13,13 @@ async function login(request, response, next) {
   const { email, password } = request.body;
 
   try {
-    
+    const limitReached = await authenticationServices.checkUserRateLimit(email);
+    if(limitReached){
+      throw errorResponder(
+        errorTypes.FORBIDDEN,
+        "Too many failed login attempts",
+      );
+    }
     // Check login credentials
     const loginSuccess = await authenticationServices.checkLoginCredentials(
       email,
@@ -23,14 +29,15 @@ async function login(request, response, next) {
     if (!loginSuccess) {
       await authenticationServices.updatingUserAttempt(email);
       const userAttempt = await authenticationServices.getUserAttempt(email);
-      console.log('[' + moment().format('YYYY-mm-DD hh:mm:ss').toString() + ']' + ' User ' + email + ' gagal login. Attempt:' +userAttempt);
+      console.log('[' + moment().format('YYYY-mm-DD hh:mm:ss').toString() + ']' + ' User ' + email + ' gagal login. Attempt:' + userAttempt);
       throw errorResponder(
         errorTypes.INVALID_CREDENTIALS,
         'Wrong email or password,  attempt: ' + userAttempt,
       );
     }
     else{
-      
+      console.log('[' + moment().format('YYYY-mm-DD hh:mm:ss').toString() + ']' + ' User ' + email + ' berhasil login.');
+      await authenticationServices.resettingUserAttempt(email);
     }
     return response.status(200).json(loginSuccess);
   } catch (error) {

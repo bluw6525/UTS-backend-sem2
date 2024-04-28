@@ -1,6 +1,7 @@
 const authenticationRepository = require('./authentication-repository');
 const { generateToken } = require('../../../utils/session-token');
 const { passwordMatched } = require('../../../utils/password');
+const moment = require('moment');
 
 /**
  * Check username and password for login.
@@ -34,22 +35,42 @@ async function checkLoginCredentials(email, password) {
 }
 
 async function updatingUserAttempt(email) {
-  const checkattempt = await authenticationRepository.getUserAttempt(email);
-  if(!!!checkattempt){
+  const checkattempt = await authenticationRepository.getUserAttempts(email);
+  if (!!!checkattempt) {
     await authenticationRepository.setUserAttempt(email);
-  }
-  else{
+  } else {
     await authenticationRepository.updateUserAttempt(email);
   }
 }
 
 async function getUserAttempt(email) {
-  const attempt =  await authenticationRepository.getUserAttempt(email);
-  return attempt["attempt"];
+  const attempt = await authenticationRepository.getUserAttempts(email);
+  return attempt['attempt'];
+}
+
+async function checkUserRateLimit(email) {
+  const attempt = await authenticationRepository.getUserAttempts(email);
+  if (!!attempt) {
+    if (attempt['attempt'] >= 5) {
+      if (moment().diff(attempt['time'], 'minutes') >= 30) {
+        await authenticationRepository.resetUserAttempt(email);
+        return false;
+      } else {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+async function resettingUserAttempt(email) {
+  await authenticationRepository.resetUserAttempt(email);
 }
 
 module.exports = {
   checkLoginCredentials,
   getUserAttempt,
   updatingUserAttempt,
+  checkUserRateLimit,
+  resettingUserAttempt,
 };
