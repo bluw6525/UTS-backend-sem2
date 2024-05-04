@@ -144,6 +144,11 @@ const errorTypes = {
     status: 404,
     code: 'NOT_FOUND_ERROR',
   },
+  USER_NOT_FOUND: {
+    description: 'User not found',
+    status: 404,
+    code: 'USER_NOT_FOUND_ERROR',
+  },
   UNPROCESSABLE_ENTITY: {
     description: 'Unprocessable entity',
     status: 422,
