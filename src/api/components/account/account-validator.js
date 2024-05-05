@@ -1,7 +1,4 @@
 const joi = require('joi');
-const { joiPasswordExtendCore } = require('joi-password');
-const { deleteAccount } = require('./account-repository');
-const joiPassword = joi.extend(joiPasswordExtendCore);
 
 module.exports = {
   createAccount:{

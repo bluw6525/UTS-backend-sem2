@@ -4,7 +4,8 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 async function transferMoney(request, response, next) {
   try {
     const senderId = request.params.id;
-    const { receiverId, amount, pin, description } = request.body;
+    const { receiverId, amount, pin} = request.body;
+    const description = request.body.description || 'fund transfer';
     const pinCorrect = await transactionServices.checkPin(senderId, pin);
     if (!pinCorrect) {
       throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'pin incorrect');
