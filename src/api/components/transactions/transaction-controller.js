@@ -17,7 +17,7 @@ async function transferMoney(request, response, next) {
     if (!balanceEnough) {
       throw errorResponder(errorTypes.INSUFFICIENT_FUNDS, 'balance not enough');
     }
-    const success = await transactionServices.makeTranscation(
+    const success = await transactionServices.makeTransaction(
       senderId,
       receiverId,
       amount,

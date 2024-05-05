@@ -9,7 +9,7 @@ const accountSchema = new Schema({
   history: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'transcation',
+      ref: 'transaction',
     },
   ],
 });

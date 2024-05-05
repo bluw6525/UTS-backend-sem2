@@ -15,7 +15,7 @@ async function checkAccountBalance(id, amount){
   return false;
 }
 
-async function makeTranscation(senderId, receiverId, amount, description){
+async function makeTransaction(senderId, receiverId, amount, description){
   try{
     await transactionRepository.createTransaction(senderId,receiverId,amount, description);
   }
@@ -28,5 +28,5 @@ async function makeTranscation(senderId, receiverId, amount, description){
 module.exports ={
   checkPin,
   checkAccountBalance,
-  makeTranscation,
+  makeTransaction,
 }

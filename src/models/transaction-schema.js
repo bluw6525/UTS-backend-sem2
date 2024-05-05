@@ -13,7 +13,7 @@ const transactionSchema = new Schema({
   reference: 
   {
     type: Schema.Types.ObjectId,
-      ref: 'transcation',
+      ref: 'transaction',
   },
 });
 
