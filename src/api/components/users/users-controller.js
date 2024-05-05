@@ -138,7 +138,6 @@ async function updateUser(request, response, next) {
 async function deleteUser(request, response, next) {
   try {
     const id = request.params.id;
-
     const success = await usersService.deleteUser(id);
     if (!success) {
       throw errorResponder(

@@ -72,6 +72,11 @@ const errorTypes = {
     status: 403,
     code: 'INVALID_PASSWORD_ERROR',
   },
+  INVALID_PIN:{
+    description: 'Invalid pin',
+    status: 403,
+    code: 'INVALID_PIN_ERROR',
+  },
   TOKEN_EXPIRED: {
     description: 'Token expired',
     status: 419,

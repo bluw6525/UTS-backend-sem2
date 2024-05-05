@@ -1,8 +1,15 @@
 const { User, Account, Transaction } = require('../../../models');
 
+async function getAccounts(){
+  return Account.find({});
+}
 
-async function getUser(name, email) {
-  return User.findOne({name, email});
+async function getAccountbyId(id){
+  return Account.findById(id);
+}
+
+async function getUserbyEmail(email) {
+  return User.findOne({email});
 };
 
 async function createAccount(name, email, pin, balance) {
@@ -60,8 +67,30 @@ async function changeAccountOwner(newId, oldId, accountId) {
   );
 }
 
+async function getAccountskey() {
+  return Object.keys((await Account.findOne()).toObject());
+}
+
+async function deleteAccount(id){
+  const user = await Account.findOne({account : id});
+  await User.updateOne(
+    {
+      _id: user.id,
+    },
+    {
+      $pull: {
+        account: id,
+      },
+    }
+  );
+  return Account.deleteOne({ _id: id });
+}
 module.exports = {
-  getUser,
+  getUserbyEmail,
   createAccount,
   changeAccountOwner,
+  getAccounts,
+  getAccountbyId,
+  getAccountskey,
+  deleteAccount,
 };

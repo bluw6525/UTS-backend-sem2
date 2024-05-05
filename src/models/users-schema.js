@@ -7,7 +7,7 @@ const usersSchema = new Schema({
   account: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'banking',
+      ref: 'account',
     },
   ],
 });

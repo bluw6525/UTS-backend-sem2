@@ -1,13 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const transactionSchema = new Schema({
-  date: Date,
-  toWho: String,
-  amount: Number,
-  description: String,
-});
-
 const accountSchema = new Schema({
   name: String,
   email: String,
@@ -21,4 +14,4 @@ const accountSchema = new Schema({
   ],
 });
 
-module.exports = { accountSchema, transactionSchema };
+module.exports = accountSchema;
