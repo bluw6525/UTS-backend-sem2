@@ -28,6 +28,7 @@ async function createAccount(request, response, next) {
         'failed to create account'
       );
     }
+    return response.status(200).json({name, email, pin, balance})
   } catch (error) {
     return next(error);
   }
@@ -55,6 +56,7 @@ async function changeAccountOwner(request, response, next) {
         'failed to change account owner'
       );
     }
+    return response.status(200).json({status : 'success change owner'})
   } catch (error) {
     return next(error);
   }
@@ -82,6 +84,7 @@ async function deleteAccount(request, response, next) {
         'failed to delete account'
       );
     }
+    return response.status(200).json({status : 'deleted'})
   } catch (error) {
     return next(error);
   }

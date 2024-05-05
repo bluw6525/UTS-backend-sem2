@@ -129,6 +129,11 @@ const errorTypes = {
     status: 409,
     code: 'EMAIL_ALREADY_TAKEN_ERROR',
   },
+  INSUFFICIENT_FUNDS: {
+    description: 'you\'re accont balance not enough',
+    status: 409,
+    code: 'INSUFFICIENT_FUNDS_ERROR',
+  },
   SEND_EMAIL: {
     description: 'Send email error',
     status: 500,

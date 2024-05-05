@@ -1,4 +1,4 @@
-const { User, Account, Transaction } = require('../../../models');
+const { User, Account } = require('../../../models');
 
 async function getAccounts(){
   return Account.find({});

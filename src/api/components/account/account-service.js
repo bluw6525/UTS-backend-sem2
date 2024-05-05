@@ -110,4 +110,5 @@ module.exports = {
   getAccounts,
   splitFormat,
   regularExpression,
+  deleteAccount,
 };
