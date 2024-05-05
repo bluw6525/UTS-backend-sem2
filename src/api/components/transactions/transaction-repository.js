@@ -43,6 +43,9 @@ async function createTransaction(senderId, receiverId, amount, description) {
       $push: {
         history: senderTransaction.id,
       },
+      $inc:{
+        balance: -amount,
+      },
     }
   );
   return Account.updateOne(
@@ -52,6 +55,9 @@ async function createTransaction(senderId, receiverId, amount, description) {
     {
       $push: {
         history: receiverTransaction.id,
+      },
+      $inc:{
+        balance: amount,
       },
     }
   );

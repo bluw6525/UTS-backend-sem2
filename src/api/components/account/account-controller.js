@@ -14,6 +14,7 @@ async function getAccounts(request, response, next) {
   }
 }
 
+
 async function createAccount(request, response, next) {
   try {
     const { name, email, pin, balance } = request.body;
