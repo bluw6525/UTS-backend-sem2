@@ -8,9 +8,9 @@ const authenticationMiddleware = require('../../middlewares/authentication-middl
 const route = express.Router();
 
 module.exports = (app) => {
-  app.use('/account', route);
+  app.use('/accounts', route);
 
-  route.get('/', authenticationMiddleware, usersControllers.getAccounts);
+  route.get('/', authenticationMiddleware, accountControllers.getAccounts);
 
   route.post('/', authenticationMiddleware, celebrate(accountValidators.createAccount), accountControllers.createAccount);
 

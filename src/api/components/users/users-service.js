@@ -220,6 +220,9 @@ async function pagination(users, page_size, page_number) {
   }
   const count = users.length;
   const total_pages = Math.ceil(count / page_size);
+  if(page_number > total_pages){
+    page_number = total_pages;
+  }
   const start = (page_number - 1) * page_size;
   const end = page_number * page_size;
   let has_previous_page;

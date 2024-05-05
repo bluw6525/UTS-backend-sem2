@@ -36,11 +36,7 @@ async function checkLoginCredentials(email, password) {
 
 async function updatingUserAttempt(email) {
   const checkattempt = await authenticationRepository.getUserAttempts(email);
-  if (!!!checkattempt) {
-    await authenticationRepository.setUserAttempt(email);
-  } else {
     await authenticationRepository.updateUserAttempt(email);
-  }
 }
 
 async function getUserAttempt(email) {
@@ -60,6 +56,9 @@ async function checkUserRateLimit(email) {
       }
     }
     return false;
+  }
+  else{
+    await authenticationRepository.setUserAttempt(email);
   }
 }
 

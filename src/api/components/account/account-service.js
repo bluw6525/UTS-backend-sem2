@@ -33,7 +33,7 @@ async function getAccounts() {
 }
 async function checkUserExist(email) {
   const user = await accountRepository.getUserbyEmail(email);
-  return !!!user;
+  return !!user;
 }
 
 async function deleteAccount(id, pin){

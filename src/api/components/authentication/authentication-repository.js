@@ -17,7 +17,7 @@ async function getUserAttempts(email) {
 }
 
 async function setUserAttempt(email) {
-  attempts.push({ email: email, attempt: 1, time: moment()});
+  attempts.push({ email: email, attempt: 0, time: moment()});
 }
 
 async function updateUserAttempt(email){

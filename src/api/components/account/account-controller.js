@@ -40,7 +40,8 @@ async function changeAccountOwner(request, response, next) {
     const accountId = request.params.id;
     const { newOwnerEmail, pin } = request.body;
     const checkUserExist = await accountService.checkUserExist(email);
-    if (!userExist) {
+
+    if (!checkUserExist) {
       throw errorResponder(errorTypes.USER_NOT_FOUND, 'User not found');
     }
     const pinCorrect = await accountService.checkPin(accountId, pin);

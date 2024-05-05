@@ -10,8 +10,8 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
  */
 async function getUsers(request, response, next) {
   try {
-    const page_number = parseInt(request.query.page_number) || 1;
-    let page_size = parseInt(request.query.page_size);
+    const page_number = request.query.page_number || 1;
+    let page_size = request.query.page_size;
     const search = request.query.search;
     const sort = request.query.sort || 'email:asc';
     const [ fnSearch, iSearch ] = await usersService.splitFormat(search);
