@@ -174,6 +174,11 @@ async function changePassword(userId, password) {
   return true;
 }
 
+/**
+ * splitting format when encounter :
+ * @param {string} query -query that want to be split
+ * @returns {string, string}
+ */
 async function splitFormat(query) {
   if (!!query) {
     const fieldname = query.match(/^[^:]+/) ? query.match(/^[^:]+/)[0] : null;
@@ -184,6 +189,13 @@ async function splitFormat(query) {
   }
 }
 
+
+/**
+ * changing key into pattern
+ * @param {string} fieldname - fieldname
+ * @param {string} key - pattern key
+ * @returns {RegExp}
+ */
 async function regularExpression(fieldname, key) {
   console.log(fieldname, key);
   const userkey = await usersRepository.getUserkey();
@@ -200,6 +212,13 @@ async function regularExpression(fieldname, key) {
   }
 }
 
+/**
+ * Sorting Array by fieldname and key
+ * @param {Array} users -Users array object
+ * @param {string} fieldname -sort field name
+ * @param {RegExp} key -sort key
+ * @returns {string}
+ */
 async function userSort(users, fieldname, key) {
   const userkey = await usersRepository.getUserkey();
   const sortedUser = await users.sort((a, b) => {
@@ -214,6 +233,13 @@ async function userSort(users, fieldname, key) {
   return sortedUser;
 }
 
+/**
+ * 
+ * @param {Array} users  -Users array object
+ * @param {number} page_size  -user page size
+ * @param {number} page_number -user page number
+ * @returns {Array}
+ */
 async function pagination(users, page_size, page_number) {
   if (!!!page_size) {
     page_size = users.length;

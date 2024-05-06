@@ -1,6 +1,12 @@
 const accountRepository = require('./account-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
 
+/**
+ * get account
+ * @param {string} searchfn -search fieldname
+ * @param {RegExp} searchkey -search key
+ * @returns {Array}
+ */
 async function getAccounts(searchfn, searchkey) {
   const accounts = await accountRepository.getAccounts();
   const results = [];
@@ -30,11 +36,25 @@ async function getAccounts(searchfn, searchkey) {
   }
   return results;
 }
+
+/**
+ * check if user exist
+ * @param {string} name -User name
+ * @param {string} email -User email
+ * @returns {boolean}
+ */
 async function checkUserExist(name, email) {
   const user = await accountRepository.getUserbyNameEmail(name, email);
   return !!user;
 }
 
+/**
+ * Check if Account Owner is the same
+ * @param {string} name -Account name
+ * @param {sting} email -Account email
+ * @param {string} id -Account ID
+ * @returns {boolean}
+ */
 async function checkAccountOwner(name, email, id){
   const account = await accountRepository.getAccountbyId(id);
   console.log(account)
@@ -43,11 +63,25 @@ async function checkAccountOwner(name, email, id){
   }
   return true;
 }
+
+/**
+ * Deleting an Account
+ * @param {string} id -Account ID
+ * @returns {boolean}
+ */
 async function deleteAccount(id) {
   const success = await accountRepository.deleteAccount(id);
   return !!success;
 }
 
+/**
+ * Creating new Account
+ * @param {string} name -Account name
+ * @param {string} email -Account email
+ * @param {string} pin -Account pin
+ * @param {number} balance -Account balance
+ * @returns {boolean}
+ */
 async function createAccount(name, email, pin, balance) {
   const hashedPin = await hashPassword(pin);
   const success = await accountRepository.createAccount(
@@ -59,12 +93,25 @@ async function createAccount(name, email, pin, balance) {
   return !!success;
 }
 
+/**
+ * Checking pin correct
+ * @param {string} id -Account ID
+ * @param {string} pin -Account pin
+ * @returns {boolean}
+ */
 async function checkPin(id, pin) {
   const account = await accountRepository.getAccountbyId(id);
   const pinMatch = await passwordMatched(pin, account.pin);
-  return pinMatch;
+  return !!pinMatch;
 }
 
+/**
+ * Changing Account Owner
+ * @param {string} newOwnerName -new owner Account name
+ * @param {string} newOwnerEmail -new owner Account email
+ * @param {string} accountId -old owner id
+ * @returns 
+ */
 async function changeAccountOwner(newOwnerName, newOwnerEmail, accountId) {
   const oldUser = await accountRepository.getUserbyAccount(accountId);
   const newUser = await accountRepository.getUserbyNameEmail(
@@ -79,6 +126,11 @@ async function changeAccountOwner(newOwnerName, newOwnerEmail, accountId) {
   return !!success;
 }
 
+/**
+ * splitting format when encounter :
+ * @param {string} query -query that want to be split
+ * @returns {string, string}
+ */
 async function splitFormat(query) {
   if (!!query) {
     const fieldname = query.match(/^[^:]+/) ? query.match(/^[^:]+/)[0] : null;
@@ -89,6 +141,12 @@ async function splitFormat(query) {
   }
 }
 
+/**
+ * changing key into pattern
+ * @param {string} fieldname - fieldname
+ * @param {string} key - pattern key
+ * @returns {RegExp}
+ */
 async function regularExpression(fieldname, key) {
   const accountkey = await accountRepository.getAccountskey();
   let pattern;
@@ -104,6 +162,13 @@ async function regularExpression(fieldname, key) {
   }
 }
 
+/**
+ * Sorting Array by fieldname and key
+ * @param {Array} users -Users array object
+ * @param {string} fieldname -sort field name
+ * @param {RegExp} key -sort key
+ * @returns {string}
+ */
 async function accountSort(account, fieldname, key) {
   const accountkey = await accountRepository.getAccountskey();
   const sortedAccount = await account.sort((a, b) => {

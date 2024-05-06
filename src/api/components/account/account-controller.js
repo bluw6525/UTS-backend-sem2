@@ -1,6 +1,13 @@
 const accountService = require('./account-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
+/**
+ * Handle get list Accounts
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function getAccounts(request, response, next) {
   try {
     const search = request.query.search;
@@ -16,6 +23,13 @@ async function getAccounts(request, response, next) {
   }
 }
 
+/**
+ * Handle create Account
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function createAccount(request, response, next) {
   try {
     const { name, email, pin, balance } = request.body;
@@ -33,7 +47,13 @@ async function createAccount(request, response, next) {
   }
 }
 
-
+/**
+ * Handle changing account owner
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function changeAccountOwner(request, response, next) {
   try {
     const accountId = request.params.id;
@@ -68,6 +88,13 @@ async function changeAccountOwner(request, response, next) {
   }
 }
 
+/**
+ * Handle deleting an account
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function deleteAccount(request, response, next) {
   try {
     const id = request.params.id;

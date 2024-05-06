@@ -49,4 +49,13 @@ module.exports = {
       password_confirm: joi.string().required().label('Password confirmation'),
     },
   },
+
+  getUsers:{
+    query: {
+      page_number: joi.number().integer().positive().optional().empty('').label('page number'),
+      page_size: joi.number().integer().positive().optional().empty('').label('page size'),
+      search: joi.string().optional().empty('').label('search'),
+      sort: joi.string().optional().empty('').label('sort'),
+    },
+  },
 };
