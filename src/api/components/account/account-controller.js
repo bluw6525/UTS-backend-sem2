@@ -4,43 +4,41 @@ const { errorResponder, errorTypes } = require('../../../core/errors');
 async function getAccounts(request, response, next) {
   try {
     const search = request.query.search;
+    const sort = request.query.sort || 'name:asc';
     const [fnSearch, iSearch] = await accountService.splitFormat(search);
     const regSearch = await accountService.regularExpression(fnSearch, iSearch);
     const [fnSort, iSort] = await accountService.splitFormat(sort);
     const accounts = await accountService.getAccounts(fnSearch, regSearch);
-    return response.status(200).json(accounts);
+    const sorted = await accountService.accountSort(accounts, fnSort, iSort);
+    return response.status(200).json(sorted);
   } catch (error) {
     return next(error);
   }
 }
-
 
 async function createAccount(request, response, next) {
   try {
     const { name, email, pin, balance } = request.body;
-    const userExist = await accountService.checkUserExist(email);
-    if (!userExist) {
-      throw errorResponder(errorTypes.USER_NOT_FOUND, 'User not found');
+    const checkUserExist = await accountService.checkUserExist(name, email);
+    if (!checkUserExist) {
+      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Unknown user');
     }
-    const success = await createAccount(name, email, pin, balance);
+    const success = await accountService.createAccount(name, email, pin, balance); 
     if (!success) {
-      throw errorResponder(
-        errorTypes.UNPROCESSABLE_ENTITY,
-        'failed to create account'
-      );
+      throw errorResponder(errorTypes.UNPROCESSABLE_ENTITY, 'Failed to create account');
     }
-    return response.status(200).json({name, email, pin, balance})
+    return response.status(200).json({ name, email, pin, balance });
   } catch (error) {
     return next(error);
   }
 }
 
+
 async function changeAccountOwner(request, response, next) {
   try {
     const accountId = request.params.id;
-    const { newOwnerEmail, pin } = request.body;
-    const checkUserExist = await accountService.checkUserExist(email);
-
+    const { newOwnerName, newOwnerEmail, pin } = request.body;
+    const checkUserExist = await accountService.checkUserExist(newOwnerName, newOwnerEmail);
     if (!checkUserExist) {
       throw errorResponder(errorTypes.USER_NOT_FOUND, 'User not found');
     }
@@ -48,10 +46,16 @@ async function changeAccountOwner(request, response, next) {
     if (!pinCorrect) {
       throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'pin incorrect');
     }
+    const checkOwner = await accountService.checkAccountOwner(newOwnerName, newOwnerEmail, accountId)
+    if(!checkOwner){
+      throw errorResponder(errorTypes.SAME_OWNER, 'old owner cant be the same as new one')
+    }
     const success = await accountService.changeAccountOwner(
+      newOwnerName,
       newOwnerEmail,
       accountId
     );
+  
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,
@@ -74,12 +78,11 @@ async function deleteAccount(request, response, next) {
         'pin and confirm pin missmatch'
       );
     }
-    const pinCorrect = await accountService.checkPin(pin);
+    const pinCorrect = await accountService.checkPin(id, pin);
     if (!pinCorrect) {
       throw errorResponder(errorTypes.INVALID_PIN, 'pin incorrect');
     }
-
-    const success = await accountService.deleteAccount(Id);
+    const success = await accountService.deleteAccount(id);
     if (!success) {
       throw errorResponder(
         errorTypes.UNPROCESSABLE_ENTITY,

@@ -1,7 +1,7 @@
 const joi = require('joi');
 
 module.exports = {
-  createAccount:{
+  createAccount: {
     body: {
       name: joi.string().min(1).max(100).required().label('Name'),
       email: joi.string().email().required().label('Email'),
@@ -10,17 +10,24 @@ module.exports = {
     },
   },
 
-  changeAccountOwner:{
-    body:{
+  changeAccountOwner: {
+    body: {
+      newOwnerName: joi.string().min(1).max(100).required().label('Name'),
       newOwnerEmail: joi.string().email().required().label('Email'),
-      pin:  joi.string().min(6).max(6).pattern(/^\d+$/).required().label('Pin'),
+      pin: joi.string().min(6).max(6).pattern(/^\d+$/).required().label('Pin'),
     },
   },
 
-  deleteAccount:{
-    body:{
+  deleteAccount: {
+    body: {
       pin: joi.string().min(6).max(6).pattern(/^\d+$/).required().label('Pin'),
-      confirmPin: joi.string().min(6).max(6).pattern(/^\d+$/).required().label('Confirmation Pin'),
+      confirmPin: joi
+        .string()
+        .min(6)
+        .max(6)
+        .pattern(/^\d+$/)
+        .required()
+        .label('Confirmation Pin'),
     },
   },
 };

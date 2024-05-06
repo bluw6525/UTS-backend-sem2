@@ -134,6 +134,11 @@ const errorTypes = {
     status: 409,
     code: 'INSUFFICIENT_FUNDS_ERROR',
   },
+  SAME_OWNER: {
+    description: 'old owner and new owner is the same',
+    status: 409,
+    code: 'SAME_OWNER',
+  },
   SEND_EMAIL: {
     description: 'Send email error',
     status: 500,

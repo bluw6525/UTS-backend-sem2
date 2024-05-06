@@ -35,10 +35,8 @@ async function login(request, response, next) {
         'Wrong email or password,  attempt: ' + userAttempt,
       );
     }
-    else{
-      console.log('[' + moment().format('YYYY-mm-DD hh:mm:ss').toString() + ']' + ' User ' + email + ' berhasil login.');
-      await authenticationServices.resettingUserAttempt(email);
-    }
+    console.log('[' + moment().format('YYYY-mm-DD hh:mm:ss').toString() + ']' + ' User ' + email + ' berhasil login.');
+    await authenticationServices.resettingUserAttempt(email);
     return response.status(200).json(loginSuccess);
   } catch (error) {
     return next(error);

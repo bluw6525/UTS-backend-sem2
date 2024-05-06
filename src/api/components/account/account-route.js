@@ -12,9 +12,24 @@ module.exports = (app) => {
 
   route.get('/', authenticationMiddleware, accountControllers.getAccounts);
 
-  route.post('/', authenticationMiddleware, celebrate(accountValidators.createAccount), accountControllers.createAccount);
+  route.post(
+    '/',
+    authenticationMiddleware,
+    celebrate(accountValidators.createAccount),
+    accountControllers.createAccount
+  );
 
-  route.put('/:id', authenticationMiddleware, celebrate(accountValidators.changeAccountOwner), accountControllers.changeAccountOwner);
+  route.put(
+    '/:id',
+    authenticationMiddleware,
+    celebrate(accountValidators.changeAccountOwner),
+    accountControllers.changeAccountOwner
+  );
 
-  route.delete('/:id', authenticationMiddleware,celebrate(accountValidators.deleteAccount), accountControllers.deleteAccount);
+  route.delete(
+    '/:id',
+    authenticationMiddleware,
+    celebrate(accountValidators.deleteAccount),
+    accountControllers.deleteAccount
+  );
 };
