@@ -1,14 +1,14 @@
 const transactionRepository = require('./transaction-repository');
 const { hashPassword, passwordMatched } = require('../../../utils/password');
 
-async function checkPin(id, pin){
-  const account = transactionRepository.getAccountbyId(id);
+async function checkPin(id, pin) {
+  const account = await transactionRepository.getAccountbyId(id);
   const pinMatch = await passwordMatched(pin, account.pin);
   return pinMatch;
 }
 
 async function checkAccountBalance(id, amount){
-  const account = transactionRepository.getAccountbyId(id);
+  const account = await transactionRepository.getAccountbyId(id);
   if(account.balance >= amount){
     return true;
   }

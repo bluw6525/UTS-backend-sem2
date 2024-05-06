@@ -7,6 +7,9 @@ async function transferMoney(request, response, next) {
     const { receiverId, amount, pin} = request.body;
     const description = request.body.description || 'fund transfer';
     const pinCorrect = await transactionServices.checkPin(senderId, pin);
+    if(senderId === receiverId){
+      throw errorResponder(errorTypes.SAME_ACCOUNT, 'sender and receiver cant be the same')
+    }
     if (!pinCorrect) {
       throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'pin incorrect');
     }

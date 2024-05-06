@@ -137,7 +137,12 @@ const errorTypes = {
   SAME_OWNER: {
     description: 'old owner and new owner is the same',
     status: 409,
-    code: 'SAME_OWNER',
+    code: 'SAME_OWNER_ERROR',
+  },
+  SAME_ACCOUNT: {
+    description: 'sender and receiver cant be the same',
+    status: 409,
+    code: 'SAME_ACCOUNT_ERROR',
   },
   SEND_EMAIL: {
     description: 'Send email error',

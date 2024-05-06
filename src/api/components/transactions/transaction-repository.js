@@ -1,6 +1,6 @@
 const { Account, Transaction } = require('../../../models');
 const moment = require('moment');
-async function getAccountbyId(id) {
+async function getAccountbyId(id){
   return Account.findById(id);
 }
 
@@ -10,7 +10,7 @@ async function createTransaction(senderId, receiverId, amount, description) {
   const senderTransaction = await Transaction.create({
     'date': moment().toDate(),
     'to/From': receiver.name,
-    'type': 'Money Out',
+    'type': 'Transfer',
     'amount': amount,
     'description': description,
   });
@@ -18,19 +18,20 @@ async function createTransaction(senderId, receiverId, amount, description) {
   const receiverTransaction = await Transaction.create({
     'date': moment().toDate(),
     'to/From': receiver.name,
-    'type': 'Money Out',
+    'type': 'Receive',
     'amount': amount,
     'description': description,
     'reference': senderTransaction.id,
   });
 
+
   await Transaction.updateOne(
     {
-      _id: receiverId,
+      _id: senderTransaction.id,
     },
     {
       $set: {
-        reference: receiverTransaction,
+        reference: receiverTransaction.id,
       },
     }
   );

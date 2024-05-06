@@ -6,7 +6,7 @@ const transactionSchema = new Schema({
   'To/from' : String,
   type: {
     type: String,
-    enum: ['Money In', 'Money Out'],
+    enum: ['Transfer', 'Receive'],
   },
   amount: Number,
   description: String,
