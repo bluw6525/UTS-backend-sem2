@@ -121,6 +121,7 @@ async function getAccountskey() {
  */
 async function deleteAccount(id){
   const user = await User.findOne({account : id});
+  console.log(user);
   await User.updateOne(
     {
       _id: user.id,

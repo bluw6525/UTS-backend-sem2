@@ -1,4 +1,5 @@
 const joi = require('joi');
+const { depositMoney } = require('./transaction-service');
 
 module.exports = {
   transferMoney: {
@@ -9,4 +10,11 @@ module.exports = {
       description : joi.string().min(6).max(100).optional(),
     },
   },
+
+  depositMoney:{
+    body:{
+      amount : joi.number().required().label('amount'), 
+      description : joi.string().min(6).max(100).optional(),
+    }
+  }
 };

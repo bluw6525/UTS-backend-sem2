@@ -6,16 +6,16 @@ const moment = require('moment');
  * @param {string} id -Account ID
  * @returns {Promise}
  */
-async function getAccountbyId(id){
+async function getAccountbyId(id) {
   return Account.findById(id);
 }
 
 /**
  * Create new Transaction
- * @param {*} senderId  -Sender Account ID
- * @param {*} receiverId  -Receiver Account ID
- * @param {*} amount -Total Amount Transfered
- * @param {*} description -Transfer Description
+ * @param {string} senderId  -Sender Account ID
+ * @param {string} receiverId  -Receiver Account ID
+ * @param {number} amount -Total Amount Transfered
+ * @param {string} description -Transfer Description
  * @returns {Promise}
  */
 async function createTransaction(senderId, receiverId, amount, description) {
@@ -23,20 +23,20 @@ async function createTransaction(senderId, receiverId, amount, description) {
   const receiver = await Account.findById(receiverId);
   //create sender transaction
   const senderTransaction = await Transaction.create({
-    'date': moment().toDate(),
-    'ToFrom': receiver.name,
-    'type': 'Transfer',
-    'amount': amount,
-    'description': description,
+    date: moment().toDate(),
+    ToFrom: receiver.name,
+    type: 'Transfer',
+    amount: amount,
+    description: description,
   });
   //create receiver transaction
   const receiverTransaction = await Transaction.create({
-    'date': moment().toDate(),
-    'ToFrom': sender.name,
-    'type': 'Receive',
-    'amount': amount,
-    'description': description,
-    'reference': senderTransaction.id,
+    date: moment().toDate(),
+    ToFrom: sender.name,
+    type: 'Receive',
+    amount: amount,
+    description: description,
+    reference: senderTransaction.id,
   });
   //updating sender transaction reference to receiver id
   await Transaction.updateOne(
@@ -58,7 +58,7 @@ async function createTransaction(senderId, receiverId, amount, description) {
       $push: {
         history: senderTransaction.id,
       },
-      $inc:{
+      $inc: {
         balance: -amount,
       },
     }
@@ -72,13 +72,35 @@ async function createTransaction(senderId, receiverId, amount, description) {
       $push: {
         history: receiverTransaction.id,
       },
-      $inc:{
+      $inc: {
         balance: amount,
       },
     }
   );
 }
+
+async function makeDeposit(id, amount, description) {
+  const deposit = await Transaction.create({
+    date: moment().toDate(),
+    type: 'Deposit',
+    amount: amount,
+    description: description,
+  });
+  return Account.updateOne(
+    {
+      _id: id,
+    },
+    {
+      $push:{
+        history: deposit.id,
+      },
+      $inc:{
+        balance: amount,
+      },
+    });
+}
 module.exports = {
   getAccountbyId,
   createTransaction,
+  makeDeposit,
 };

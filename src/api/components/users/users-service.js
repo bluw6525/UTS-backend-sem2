@@ -197,7 +197,6 @@ async function splitFormat(query) {
  * @returns {RegExp}
  */
 async function regularExpression(fieldname, key) {
-  console.log(fieldname, key);
   const userkey = await usersRepository.getUserkey();
   let pattern;
   if (userkey.includes(fieldname)) {

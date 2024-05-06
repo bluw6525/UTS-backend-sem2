@@ -35,7 +35,7 @@ async function transferMoney(request, response, next) {
       description
     );
     if(!success){
-      throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'Wrong account id')
+      throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'Wrong account id');
     }
     return response.status(200).json({status : 'success', to: receiverId, amount});
   } catch (error) {
@@ -43,6 +43,29 @@ async function transferMoney(request, response, next) {
   }
 }
 
+/**
+ * Handle deposit money
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
+async function depositMoney(request, response, next){
+  try{
+    const accountId = request.params.id;
+    const amount = request.body.amount;
+    const description = request.body.description || 'deposit money';
+    const success = await transactionServices.depositMoney(accountId, amount, description);
+    if(!success){
+      throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'Wrong account id');
+    }
+    return response.status(200).json({status : 'success', to: accountId, amount});
+  }catch(error){
+    return next(error);
+  }
+}
+
 module.exports = {
   transferMoney,
+  depositMoney
 };

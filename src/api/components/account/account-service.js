@@ -55,10 +55,10 @@ async function checkUserExist(name, email) {
  * @param {string} id -Account ID
  * @returns {boolean}
  */
-async function checkAccountOwner(name, email, id){
+async function checkAccountOwner(name, email, id) {
   const account = await accountRepository.getAccountbyId(id);
-  console.log(account)
-  if(account.name === name && account.email === email){
+  console.log(account);
+  if (account.name === name && account.email === email) {
     return false;
   }
   return true;
@@ -110,7 +110,7 @@ async function checkPin(id, pin) {
  * @param {string} newOwnerName -new owner Account name
  * @param {string} newOwnerEmail -new owner Account email
  * @param {string} accountId -old owner id
- * @returns 
+ * @returns
  */
 async function changeAccountOwner(newOwnerName, newOwnerEmail, accountId) {
   const oldUser = await accountRepository.getUserbyAccount(accountId);
@@ -173,9 +173,17 @@ async function accountSort(account, fieldname, key) {
   const accountkey = await accountRepository.getAccountskey();
   const sortedAccount = await account.sort((a, b) => {
     if (key === 'asc' && accountkey.includes(fieldname)) {
-      return a[fieldname].localeCompare(b[fieldname]);
+      if (typeof a[fieldname] === 'number') {
+        return a[fieldname] - b[fieldname];
+      } else {
+        return a[fieldname].localeCompare(b[fieldname]);
+      }
     } else if (key === 'desc' && accountkey.includes(fieldname)) {
-      return b[fieldname].localeCompare(a[fieldname]);
+      if (typeof a[fieldname] === 'number') {
+        return b[fieldname] - a[fieldname];
+      } else {
+        return b[fieldname].localeCompare(a[fieldname]);
+      }
     } else {
       return a['email'].localeCompare(b['email']);
     }

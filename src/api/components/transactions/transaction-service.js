@@ -29,7 +29,7 @@ async function checkAccountBalance(id, amount){
 
 
 /**
- * Handle creating new transaction
+ * creating new transaction transfer
  * @param {string} senderId -Sender Account ID
  * @param {string} receiverId  -Receiver Account ID
  * @param {number} amount -Amount being transfered
@@ -46,8 +46,25 @@ async function makeTransaction(senderId, receiverId, amount, description){
   return true;
 }
 
+/**
+ * creating new transaction deposit
+ * @param {string} id -Account ID
+ * @param {number} amount -Amount dposited
+ * @param {string} description -transaction decription
+ * @returns 
+ */
+async function depositMoney(id, amount, description){
+  try{
+    await transactionRepository.makeDeposit(id, amount, description);
+  } catch(err){
+    return false;
+  }
+  return true;
+}
+
 module.exports ={
   checkPin,
   checkAccountBalance,
   makeTransaction,
+  depositMoney,
 }
