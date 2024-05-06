@@ -54,7 +54,12 @@ async function depositMoney(request, response, next){
   try{
     const accountId = request.params.id;
     const amount = request.body.amount;
+    const pin =  request.body.pin; 
     const description = request.body.description || 'deposit money';
+    const pinCorrect = await transactionServices.checkPin(accountId, pin);
+    if (!pinCorrect) {
+      throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'pin incorrect');
+    }
     const success = await transactionServices.depositMoney(accountId, amount, description);
     if(!success){
       throw errorResponder(errorTypes.INVALID_CREDENTIALS, 'Wrong account id');
