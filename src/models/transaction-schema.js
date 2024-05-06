@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const transactionSchema = new Schema({
   date: Date,
-  'To/from' : String,
+  'ToFrom' : String,
   type: {
     type: String,
     enum: ['Transfer', 'Receive'],

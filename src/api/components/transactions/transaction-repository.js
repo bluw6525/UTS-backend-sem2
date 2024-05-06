@@ -7,9 +7,11 @@ async function getAccountbyId(id){
 async function createTransaction(senderId, receiverId, amount, description) {
   const sender = await Account.findById(senderId);
   const receiver = await Account.findById(receiverId);
+  console.log(sender.name)
+  console.log(receiver.name)
   const senderTransaction = await Transaction.create({
     'date': moment().toDate(),
-    'to/From': receiver.name,
+    'ToFrom': receiver.name,
     'type': 'Transfer',
     'amount': amount,
     'description': description,
@@ -17,7 +19,7 @@ async function createTransaction(senderId, receiverId, amount, description) {
 
   const receiverTransaction = await Transaction.create({
     'date': moment().toDate(),
-    'to/From': receiver.name,
+    'ToFrom': sender.name,
     'type': 'Receive',
     'amount': amount,
     'description': description,
