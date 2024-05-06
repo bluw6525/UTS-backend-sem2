@@ -222,9 +222,17 @@ async function userSort(users, fieldname, key) {
   const userkey = await usersRepository.getUserkey();
   const sortedUser = await users.sort((a, b) => {
     if (key === 'asc' && userkey.includes(fieldname)) {
-      return a[fieldname].localeCompare(b[fieldname]);
+      if (typeof a[fieldname] === 'number') {
+        return a[fieldname] - b[fieldname];
+      } else {
+        return a[fieldname].localeCompare(b[fieldname]);
+      }
     } else if (key === 'desc' && userkey.includes(fieldname)) {
-      return b[fieldname].localeCompare(a[fieldname]);
+      if (typeof a[fieldname] === 'number') {
+        return b[fieldname] - a[fieldname];
+      } else {
+        return b[fieldname].localeCompare(a[fieldname]);
+      }
     } else {
       return a['email'].localeCompare(b['email']);
     }
