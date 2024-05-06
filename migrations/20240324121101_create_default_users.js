@@ -22,19 +22,19 @@ logger.info('Creating default users');
     const hashedPassword = await hashPassword(password);
     const hashedPin = await hashPassword(pin);
     const sender = await Transaction.create({
-      'date': Date.now(),
-      'ToFrom': name,
-      'type': 'Transfer',
-      'amount': transfer,
-      'description': 'fund transfer',
+      date: Date.now(),
+      ToFrom: name,
+      type: 'Transfer',
+      amount: transfer,
+      description: 'fund transfer',
     });
     const receiver = await Transaction.create({
-      'date': Date.now(),
-      'ToFrom': name,
-      'type': 'Receive',
-      'amount': transfer,
-      'description': 'fund transfer',
-      'reference': sender.id,
+      date: Date.now(),
+      ToFrom: name,
+      type: 'Receive',
+      amount: transfer,
+      description: 'fund transfer',
+      reference: sender.id,
     });
     await Transaction.updateOne(
       {
