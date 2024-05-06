@@ -1,12 +1,24 @@
 const transactionRepository = require('./transaction-repository');
-const { hashPassword, passwordMatched } = require('../../../utils/password');
+const { passwordMatched } = require('../../../utils/password');
 
+/**
+ * Check whether the password is correct or not
+ * @param {string} id -Account ID
+ * @param {string} pin -Account PIN
+ * @returns {boolean}
+ */
 async function checkPin(id, pin) {
   const account = await transactionRepository.getAccountbyId(id);
   const pinMatch = await passwordMatched(pin, account.pin);
-  return pinMatch;
+  return !!pinMatch;
 }
 
+/**
+ * Check whether the Account have enough balance
+ * @param {string} id -Account ID
+ * @param {number} amount -Amount being transfered
+ * @returns {boolean}
+ */
 async function checkAccountBalance(id, amount){
   const account = await transactionRepository.getAccountbyId(id);
   if(account.balance >= amount){
@@ -15,6 +27,15 @@ async function checkAccountBalance(id, amount){
   return false;
 }
 
+
+/**
+ * Handle creating new transaction
+ * @param {string} senderId -Sender Account ID
+ * @param {string} receiverId  -Receiver Account ID
+ * @param {number} amount -Amount being transfered
+ * @param {string} description -Transfer Description
+ * @returns {boolean}
+ */
 async function makeTransaction(senderId, receiverId, amount, description){
   try{
     await transactionRepository.createTransaction(senderId,receiverId,amount, description);

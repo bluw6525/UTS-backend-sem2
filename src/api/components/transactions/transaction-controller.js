@@ -1,6 +1,14 @@
 const transactionServices = require('./transaction-service');
 const { errorResponder, errorTypes } = require('../../../core/errors');
 
+
+/**
+ * Handle transfer money
+ * @param {object} request - Express request object
+ * @param {object} response - Express response object
+ * @param {object} next - Express route middlewares
+ * @returns {object} Response object or pass an error to the next route
+ */
 async function transferMoney(request, response, next) {
   try {
     const senderId = request.params.id;
